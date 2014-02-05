@@ -9,6 +9,7 @@ require 'ffmpeg/movie'
 require 'ffmpeg/io_monkey'
 require 'ffmpeg/transcoder'
 require 'ffmpeg/encoding_options'
+require 'ffmpeg/audio_stream'
 require 'ffmpeg/video_stream'
 
 module FFMPEG

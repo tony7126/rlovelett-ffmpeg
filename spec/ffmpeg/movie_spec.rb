@@ -70,66 +70,6 @@ module FFMPEG
         end
       end
 
-      context "given a weird aspect ratio file" do
-        before(:all) do
-          @movie = Movie.new("#{fixture_path}/movies/weird_aspect.small.mpg")
-        end
-
-        it "should parse the DAR" do
-          @movie.dar.should == "704:405"
-        end
-
-        it "should have correct calculated_aspect_ratio" do
-          @movie.calculated_aspect_ratio.to_s[0..14].should == "1.7382716049382" # substringed to be 1.9 compatible
-        end
-      end
-
-      context "given an impossible DAR" do
-        before(:all) do
-          fake_output = StringIO.new(File.read("#{fixture_path}/outputs/file_with_weird_dar.txt"))
-          Open3.stub(:popen3).and_yield(nil,fake_output,nil)
-          @movie = Movie.new(__FILE__)
-        end
-
-        it "should parse the DAR" do
-          @movie.dar.should == "0:1"
-        end
-
-        it "should calulate using width and height instead" do
-          @movie.calculated_aspect_ratio.to_s[0..14].should == "1.7777777777777" # substringed to be 1.9 compatible
-        end
-      end
-
-      context "given a weird storage/pixel aspect ratio file" do
-        before(:all) do
-          @movie = Movie.new("#{fixture_path}/movies/weird_aspect.small.mpg")
-        end
-
-        it "should parse the SAR" do
-          @movie.sar.should == "64:45"
-        end
-
-        it "should have correct calculated_pixel_aspect_ratio" do
-          @movie.calculated_pixel_aspect_ratio.to_s[0..14].should == "1.4222222222222" # substringed to be 1.9 compatible
-        end
-      end
-
-      context "given an impossible SAR" do
-        before(:all) do
-          fake_output = StringIO.new(File.read("#{fixture_path}/outputs/file_with_weird_sar.txt"))
-          Open3.stub(:popen3).and_yield(nil,fake_output,nil)
-          @movie = Movie.new(__FILE__)
-        end
-
-        it "should parse the SAR" do
-          @movie.sar.should == "0:1"
-        end
-
-        it "should using square SAR, 1.0 instead" do
-          @movie.calculated_pixel_aspect_ratio.to_s[0..14].should == "1" # substringed to be 1.9 compatible
-        end
-      end
-
       context "given a file with ISO-8859-1 characters in output" do
         it "should not crash" do
           fake_output = StringIO.new(File.read("#{fixture_path}/outputs/file_with_iso-8859-1.txt"))
@@ -201,7 +141,7 @@ module FFMPEG
         end
 
         it "should parse video stream information" do
-          @movie.video_stream.should == "h264 (Main) (avc1 / 0x31637661), yuv420p, 640x480 [SAR 1:1 DAR 4:3]"
+          @movie.video_stream.should == "h264 (Main) (avc1 / 0x31637661), yuv420p, 640x480 [SAR 1:1 DAR 4:3], 371 kb/s, 16.75 fps, 600 tbr, 600 tbn, 1200 tbc"
         end
 
         it "should know the video codec" do

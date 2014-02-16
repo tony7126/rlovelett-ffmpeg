@@ -8,7 +8,9 @@ module FFMPEG
     # @!attribute [r] video_streams
     #   @return [Array<FFMPEG::VideoStreams>] Array of video streams parsed
     attr_reader :video_streams
-    attr_reader :audio_stream, :audio_codec, :audio_bitrate, :audio_sample_rate, :audio_channels
+    # @!attribute [r] audio_streams
+    #   @return [Array<FFMPEG::AudioStreams>] Array of audio streams parsed
+    attr_reader :audio_streams
     attr_reader :container
 
     def initialize(path)
@@ -40,7 +42,9 @@ module FFMPEG
                           .select { |stream| stream.key?(:codec_type) and stream[:codec_type] === 'video' }
                           .map { |vs_hash| FFMPEG::VideoStream.new(vs_hash) }
 
-        audio_streams = metadata[:streams].select { |stream| stream.key?(:codec_type) and stream[:codec_type] === 'audio' }
+        @audio_streams = metadata[:streams]
+                          .select { |stream| stream.key?(:codec_type) and stream[:codec_type] === 'audio' }
+                          .map { |as_hash| FFMPEG::AudioStream.new(as_hash) }
 
         @container = metadata[:format][:format_name]
 
@@ -56,23 +60,58 @@ module FFMPEG
 
         @bitrate = metadata[:format][:bit_rate].to_i
 
-        unless audio_streams.empty?
-          # TODO: Handle multiple audio codecs
-          audio_stream = audio_streams.first
-          @audio_channels = audio_stream[:channels].to_i
-          @audio_codec = audio_stream[:codec_name]
-          @audio_sample_rate = audio_stream[:sample_rate].to_i
-          @audio_bitrate = audio_stream[:bit_rate].to_i
-          @audio_channel_layout = audio_stream[:channel_layout]
-          @audio_stream = "#{audio_codec} (#{audio_stream[:codec_tag_string]} / #{audio_stream[:codec_tag]}), #{audio_sample_rate} Hz, #{audio_channel_layout}, #{audio_stream[:sample_fmt]}, #{audio_bitrate} bit/s"
-        end
-
       end
 
       @invalid = true if metadata.key?(:error)
       @invalid = true if std_error.include?("Unsupported codec")
       @invalid = true if std_error.include?("is not supported")
       @invalid = true if std_error.include?("could not find codec parameters")
+    end
+
+    ##
+    # Return a string description of the first audio stream for the Movie instance. Provided the movie instance is
+    # valid and has audio streams.
+    #
+    # This is really just a convenience method to AudioStream#to_s
+    # @return [String?] A string description of the first audio stream
+    def audio_stream
+      audio_streams.first.to_s.match(/Audio:\s+(.*)$/)[1] unless @invalid or audio_streams.empty?
+    end
+
+    ##
+    # Return the name of the audio codec of the first audio stream for the Movie instance. Provided the movie instance
+    # is valid and has audio streams.
+    #
+    # This is really just a convenience method to AudioStream#codec_name
+    # @return [String?] The audio codec of the first audio stream.
+    def audio_codec
+      audio_streams.first.codec_name unless @invalid or audio_streams.empty?
+    end
+
+    ##
+    # Return the first audio streams bitrate. Provided the movie instance is valid and has audio streams.
+    #
+    # This is really just a convenience method to AudioStream#bitrate
+    # @return [Fixnum?] The bit rate of the first audio stream
+    def audio_bitrate
+      audio_streams.first.bitrate
+    end
+
+    ##
+    #
+    # This is really just a convenience method to AudioStream#sample_rate
+    # @return [Integer?] The audio codec sample rate in Hertz
+    def audio_sample_rate
+      audio_streams.first.sample_rate unless @invalid or audio_streams.empty?
+    end
+
+    ##
+    # Return the number of audio channels of the first audio stream.
+    #
+    # This is really just a convenience method to AudioStream#channels
+    # @return [Integer?] The number of audio channels of the first audio stream
+    def audio_channels
+      audio_streams.first.channels unless @invalid or audio_streams.empty?
     end
 
     ##

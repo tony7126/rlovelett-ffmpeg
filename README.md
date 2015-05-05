@@ -1,11 +1,11 @@
-Streamio FFMPEG
+RLovelett FFMPEG
 ===============
 
+[![Build Status](https://travis-ci.org/RLovelett/rlovelett-ffmpeg.svg)](https://travis-ci.org/RLovelett/rlovelett-ffmpeg)
+
+***Forked from [Streamio's](https://github.com/streamio/streamio-ffmpeg) implementation. The upstream repository appears to have stagnated.***
+
 Simple yet powerful wrapper around the ffmpeg command for reading metadata and transcoding movies.
-
-All work on this project is sponsored by the online video platform [Streamio](http://streamio.com).
-
-[![Streamio](http://d253c4ja9jigvu.cloudfront.net/assets/small-logo.png)](http://streamio.com)
 
 Installation
 ------------
@@ -203,4 +203,4 @@ movie.transcode("movie.mp4", options, transcoder_options) # returns nil
 Copyright
 ---------
 
-Copyright (c) Streamio AB. See LICENSE for details.
+Copyright (c) Streamio AB and Ryan Lovelett. See LICENSE for details.

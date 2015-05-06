@@ -1,4 +1,4 @@
-require 'spec_helper.rb'
+require "spec_helper.rb"
 
 module FFMPEG
   describe Transcoder do
@@ -25,7 +25,7 @@ module FFMPEG
     end
 
     describe "transcoding" do
-      context 'with default transcoder_options' do
+      context "with default transcoder_options" do
         before do
           FFMPEG.logger.should_receive(:info).at_least(:once)
         end
@@ -80,8 +80,8 @@ module FFMPEG
         it "should transcode the movie with EncodingOptions" do
           FileUtils.rm_f "#{tmp_path}/optionalized.mp4"
 
-          options = {video_codec: "libx264", frame_rate: 10, resolution: "320x240", video_bitrate: 300,
-                     audio_codec: "libfaac", audio_bitrate: 32, audio_sample_rate: 22050, audio_channels: 1}
+          options = { video_codec: "libx264", frame_rate: 10, resolution: "320x240", video_bitrate: 300,
+                      audio_codec: "libfaac", audio_bitrate: 32, audio_sample_rate: 22050, audio_channels: 1 }
 
           encoded = Transcoder.new(movie, "#{tmp_path}/optionalized.mp4", options).run
           encoded.video_bitrate.should be_within(90).of(300)
@@ -97,18 +97,18 @@ module FFMPEG
         context "with aspect ratio preservation" do
           before do
             @movie = Movie.new("#{fixture_path}/movies/awesome_widescreen.mov")
-            @options = {resolution: "320x240"}
+            @options = { resolution: "320x240" }
           end
 
           it "should work on width" do
-            special_options = {preserve_aspect_ratio: :width}
+            special_options = { preserve_aspect_ratio: :width }
 
             encoded = Transcoder.new(@movie, "#{tmp_path}/preserved_aspect.mp4", @options, special_options).run
             encoded.resolution.should == "320x180"
           end
 
           it "should work on height" do
-            special_options = {preserve_aspect_ratio: :height}
+            special_options = { preserve_aspect_ratio: :height }
 
             encoded = Transcoder.new(@movie, "#{tmp_path}/preserved_aspect.mp4", @options, special_options).run
             encoded.resolution.should == "426x240"
@@ -116,7 +116,7 @@ module FFMPEG
 
           it "should not be used if original resolution is undeterminable" do
             @movie.should_receive(:calculated_aspect_ratio).and_return(nil)
-            special_options = {preserve_aspect_ratio: :height}
+            special_options = { preserve_aspect_ratio: :height }
 
             encoded = Transcoder.new(@movie, "#{tmp_path}/preserved_aspect.mp4", @options, special_options).run
             encoded.resolution.should == "320x240"
@@ -124,7 +124,7 @@ module FFMPEG
 
           it "should round to resolutions divisible by 2" do
             @movie.should_receive(:calculated_aspect_ratio).at_least(:once).and_return(1.234)
-            special_options = {preserve_aspect_ratio: :width}
+            special_options = { preserve_aspect_ratio: :width }
 
             encoded = Transcoder.new(@movie, "#{tmp_path}/preserved_aspect.mp4", @options, special_options).run
             encoded.resolution.should == "320x260" # 320 / 1.234 should at first be rounded to 259
@@ -176,12 +176,12 @@ module FFMPEG
           end
 
           it "should transcode absolute resolution if specified" do
-            encoded = Transcoder.new(movie, "#{tmp_path}/image.bmp", screenshot: true, seek_time: 3, resolution: '400x200').run
+            encoded = Transcoder.new(movie, "#{tmp_path}/image.bmp", screenshot: true, seek_time: 3, resolution: "400x200").run
             encoded.resolution.should == "400x200"
           end
 
           it "should be able to preserve aspect ratio" do
-            encoded = Transcoder.new(movie, "#{tmp_path}/image.png", {screenshot: true, seek_time: 4, resolution: '320x500'}, preserve_aspect_ratio: :width).run
+            encoded = Transcoder.new(movie, "#{tmp_path}/image.png", { screenshot: true, seek_time: 4, resolution: "320x500" }, preserve_aspect_ratio: :width).run
             encoded.resolution.should == "320x240"
           end
         end
@@ -209,7 +209,7 @@ module FFMPEG
     end
 
     context "with :validate => false set as transcoding_options" do
-      let(:transcoder) { Transcoder.new(movie, "tmp.mp4", {},{:validate => false}) }
+      let(:transcoder) { Transcoder.new(movie, "tmp.mp4", {}, validate: false) }
 
       before { transcoder.stub(:transcode_movie) }
       after { FileUtils.rm_f "#{tmp_path}/tmp.mp4" }

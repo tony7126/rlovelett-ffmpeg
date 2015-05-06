@@ -1,17 +1,17 @@
-require 'bundler'
+require "bundler"
 Bundler.require
 
-require 'rspec/core/rake_task'
+require "rspec/core/rake_task"
 
-RSpec::Core::RakeTask.new('spec') do |t|
-  t.pattern = FileList['spec/**/*_spec.rb']
+RSpec::Core::RakeTask.new("spec") do |t|
+  t.pattern = FileList["spec/**/*_spec.rb"]
 end
 
-task :default => :spec
+task default: :spec
 
 desc "Push a new version to Rubygems"
 task :publish do
-  require 'ffmpeg/version'
+  require "ffmpeg/version"
 
   sh "gem build streamio-ffmpeg.gemspec"
   sh "gem push streamio-ffmpeg-#{FFMPEG::VERSION}.gem"

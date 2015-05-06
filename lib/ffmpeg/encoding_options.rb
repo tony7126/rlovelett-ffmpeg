@@ -5,7 +5,7 @@ module FFMPEG
     end
 
     def to_s
-      params = collect do |key, value|
+      params = map do |key, value|
         send("convert_#{key}", value) if value && supports_option?(key)
       end
 
@@ -30,6 +30,7 @@ module FFMPEG
     end
 
     private
+
     def supports_option?(option)
       option = RUBY_VERSION < "1.9" ? "convert_#{option}" : "convert_#{option}".to_sym
       private_methods.include?(option)
@@ -150,7 +151,7 @@ module FFMPEG
         "-filter_complex 'scale=#{self[:resolution]},overlay=x=#{value[:padding_x]}:y=main_h-overlay_h-#{value[:padding_y]}'"
       when "RB"
         "-filter_complex 'scale=#{self[:resolution]},overlay=x=main_w-overlay_w-#{value[:padding_x]}:y=main_h-overlay_h-#{value[:padding_y]}'"
-      end  
+      end
     end
 
     def convert_custom(value)

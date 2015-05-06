@@ -1,4 +1,4 @@
-require 'time'
+require "time"
 
 module FFMPEG
   class Movie
@@ -14,7 +14,7 @@ module FFMPEG
 
       # ffmpeg will output to stderr
       command = "#{FFMPEG.ffmpeg_binary} -i #{Shellwords.escape(path)}"
-      output = Open3.popen3(command) { |stdin, stdout, stderr| stderr.read }
+      output = Open3.popen3(command) { |_stdin, _stdout, stderr| stderr.read }
 
       fix_encoding(output)
 
@@ -22,7 +22,7 @@ module FFMPEG
       @container = $1
 
       output[/Duration: (\d{2}):(\d{2}):(\d{2}\.\d{2})/]
-      @duration = ($1.to_i*60*60) + ($2.to_i*60) + $3.to_f
+      @duration = ($1.to_i * 60 * 60) + ($2.to_i * 60) + $3.to_f
 
       output[/start: (\d*\.\d*)/]
       @time = $1 ? $1.to_f : 0.0
@@ -108,6 +108,7 @@ module FFMPEG
     end
 
     protected
+
     def aspect_from_dar
       return nil unless dar
       w, h = dar.split(":")

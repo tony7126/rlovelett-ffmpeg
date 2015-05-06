@@ -1,14 +1,14 @@
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
-require 'logger'
-require 'stringio'
+require "logger"
+require "stringio"
 
-require 'ffmpeg/version'
-require 'ffmpeg/errors'
-require 'ffmpeg/movie'
-require 'ffmpeg/io_monkey'
-require 'ffmpeg/transcoder'
-require 'ffmpeg/encoding_options'
+require "ffmpeg/version"
+require "ffmpeg/errors"
+require "ffmpeg/movie"
+require "ffmpeg/io_monkey"
+require "ffmpeg/transcoder"
+require "ffmpeg/encoding_options"
 
 module FFMPEG
   # FFMPEG logs information about its progress when it's transcoding.
@@ -43,6 +43,6 @@ module FFMPEG
   #
   # @return [String] the path to the ffmpeg binary
   def self.ffmpeg_binary
-    @ffmpeg_binary || 'ffmpeg'
+    @ffmpeg_binary || "ffmpeg"
   end
 end

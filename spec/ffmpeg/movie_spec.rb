@@ -1,4 +1,4 @@
-require 'spec_helper.rb'
+require "spec_helper.rb"
 
 module FFMPEG
   describe Movie do
@@ -87,7 +87,7 @@ module FFMPEG
       context "given an impossible DAR" do
         before(:all) do
           fake_output = StringIO.new(File.read("#{fixture_path}/outputs/file_with_weird_dar.txt"))
-          Open3.stub(:popen3).and_yield(nil,nil,fake_output)
+          Open3.stub(:popen3).and_yield(nil, nil, fake_output)
           @movie = Movie.new(__FILE__)
         end
 
@@ -117,7 +117,7 @@ module FFMPEG
       context "given a colorspace with parenthesis but no commas such as yuv420p(tv)" do
         before(:all) do
           fake_output = StringIO.new(File.read("#{fixture_path}/outputs/file_with_colorspace_with_parenthesis_but_no_comma.txt"))
-          Open3.stub(:popen3).and_yield(nil,nil,fake_output)
+          Open3.stub(:popen3).and_yield(nil, nil, fake_output)
           @movie = Movie.new(__FILE__)
         end
 
@@ -129,7 +129,7 @@ module FFMPEG
       context "given an impossible SAR" do
         before(:all) do
           fake_output = StringIO.new(File.read("#{fixture_path}/outputs/file_with_weird_sar.txt"))
-          Open3.stub(:popen3).and_yield(nil,nil,fake_output)
+          Open3.stub(:popen3).and_yield(nil, nil, fake_output)
           @movie = Movie.new(__FILE__)
         end
 
@@ -315,11 +315,11 @@ module FFMPEG
 
         transcoder_double = double(Transcoder)
         Transcoder.should_receive(:new).
-          with(movie, "#{tmp_path}/awesome.flv", {custom: "-vcodec libx264"}, preserve_aspect_ratio: :width).
+          with(movie, "#{tmp_path}/awesome.flv", { custom: "-vcodec libx264" }, preserve_aspect_ratio: :width).
           and_return(transcoder_double)
         transcoder_double.should_receive(:run)
 
-        movie.transcode("#{tmp_path}/awesome.flv", {custom: "-vcodec libx264"}, preserve_aspect_ratio: :width)
+        movie.transcode("#{tmp_path}/awesome.flv", { custom: "-vcodec libx264" }, preserve_aspect_ratio: :width)
       end
     end
 
@@ -329,11 +329,11 @@ module FFMPEG
 
         transcoder_double = double(Transcoder)
         Transcoder.should_receive(:new).
-          with(movie, "#{tmp_path}/awesome.jpg", {seek_time: 2, dimensions: "640x480", screenshot: true}, preserve_aspect_ratio: :width).
+          with(movie, "#{tmp_path}/awesome.jpg", { seek_time: 2, dimensions: "640x480", screenshot: true }, preserve_aspect_ratio: :width).
           and_return(transcoder_double)
         transcoder_double.should_receive(:run)
 
-        movie.screenshot("#{tmp_path}/awesome.jpg", {seek_time: 2, dimensions: "640x480"}, preserve_aspect_ratio: :width)
+        movie.screenshot("#{tmp_path}/awesome.jpg", { seek_time: 2, dimensions: "640x480" }, preserve_aspect_ratio: :width)
       end
     end
   end

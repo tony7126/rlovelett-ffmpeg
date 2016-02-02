@@ -99,6 +99,16 @@ module FFMPEG
         end
       end
 
+      context "given an ios9 mov file (with superfluous data streams)" do
+        before(:all) do
+          @movie = Movie.new("#{fixture_path}/movies/ios9.mov")
+        end
+
+        it "should be valid" do
+          @movie.should be_valid
+        end
+      end
+
       context "given a weird aspect ratio file" do
         before(:all) do
           @movie = Movie.new("#{fixture_path}/movies/weird_aspect.small.mpg")

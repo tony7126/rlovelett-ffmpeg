@@ -103,6 +103,9 @@ module FFMPEG
     end
 
     def unsupported_streams(std_error)
+      if ! std_error.valid_encoding?
+        std_error = std_error.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
+      end
       [].tap do |stream_indices|
         std_error.split("\n").each do |line|
           match = line.match(UNSUPPORTED_CODEC_PATTERN)
